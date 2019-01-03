@@ -1,1 +1,1 @@
-code-and-magick
+Learn js, code and magic.
