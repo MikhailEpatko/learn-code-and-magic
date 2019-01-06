@@ -1,7 +1,7 @@
 'use strict';
 
 var CLOUD_WIDTH = 500;
-var CLOUD_HEIGHT = 200;
+var CLOUD_HEIGHT = 250;
 var SHADOW_STEP = 10;
 var CONTROL_POINT_X_1 = CLOUD_WIDTH * 2 / 5;
 var CONTROL_POINT_X_2 = CLOUD_WIDTH * 3 / 5;
@@ -36,41 +36,41 @@ var bar = {
   MAX_HEIGHT: 130
 };
 
-var renderCloud = function name(ctx, cloud) {
+var renderCloud = function name(ctx, cloudObject) {
   ctx.beginPath();
   ctx.moveTo(cloud.X_COORDINATE, cloud.Y_COORDINATE);
 
-  ctx.bezierCurveTo(cloud.X_COORDINATE + CONTROL_POINT_X_1, cloud.Y_COORDINATE + BEZIER_STEP, 
-                    cloud.X_COORDINATE + CONTROL_POINT_X_2, cloud.Y_COORDINATE  + BEZIER_STEP,
-                    cloud.X_COORDINATE + CLOUD_WIDTH, cloud.Y_COORDINATE);
+  ctx.bezierCurveTo(cloudObject.X_COORDINATE + CONTROL_POINT_X_1, cloudObject.Y_COORDINATE + BEZIER_STEP,
+      cloudObject.X_COORDINATE + CONTROL_POINT_X_2, cloudObject.Y_COORDINATE + BEZIER_STEP,
+      cloudObject.X_COORDINATE + CLOUD_WIDTH, cloudObject.Y_COORDINATE);
 
-  ctx.bezierCurveTo(cloud.X_COORDINATE + CLOUD_WIDTH - BEZIER_STEP, cloud.Y_COORDINATE + CONTROL_POINT_Y_1, 
-                    cloud.X_COORDINATE + CLOUD_WIDTH - BEZIER_STEP, cloud.Y_COORDINATE + CONTROL_POINT_Y_2,
-                    cloud.X_COORDINATE + CLOUD_WIDTH, cloud.Y_COORDINATE + CLOUD_HEIGHT);  
-                  
-  ctx.bezierCurveTo(cloud.X_COORDINATE + CLOUD_WIDTH - CONTROL_POINT_X_2, cloud.Y_COORDINATE + CLOUD_HEIGHT - BEZIER_STEP, 
-                    cloud.X_COORDINATE + CLOUD_WIDTH - CONTROL_POINT_X_1, cloud.Y_COORDINATE + CLOUD_HEIGHT - BEZIER_STEP,
-                    cloud.X_COORDINATE, cloud.Y_COORDINATE + CLOUD_HEIGHT);
-                    
-  ctx.bezierCurveTo(cloud.X_COORDINATE + BEZIER_STEP, cloud.Y_COORDINATE + CLOUD_HEIGHT - CONTROL_POINT_Y_2, 
-                    cloud.X_COORDINATE + BEZIER_STEP, cloud.Y_COORDINATE + CLOUD_HEIGHT - CONTROL_POINT_Y_1,
-                    cloud.X_COORDINATE, cloud.Y_COORDINATE); 
+  ctx.bezierCurveTo(cloudObject.X_COORDINATE + CLOUD_WIDTH - BEZIER_STEP, cloud.Y_COORDINATE + CONTROL_POINT_Y_1,
+      cloudObject.X_COORDINATE + CLOUD_WIDTH - BEZIER_STEP, cloudObject.Y_COORDINATE + CONTROL_POINT_Y_2,
+      cloudObject.X_COORDINATE + CLOUD_WIDTH, cloudObject.Y_COORDINATE + CLOUD_HEIGHT);
+
+  ctx.bezierCurveTo(cloudObject.X_COORDINATE + CLOUD_WIDTH - CONTROL_POINT_X_2, cloudObject.Y_COORDINATE + CLOUD_HEIGHT - BEZIER_STEP,
+      cloudObject.X_COORDINATE + CLOUD_WIDTH - CONTROL_POINT_X_1, cloudObject.Y_COORDINATE + CLOUD_HEIGHT - BEZIER_STEP,
+      cloudObject.X_COORDINATE, cloudObject.Y_COORDINATE + CLOUD_HEIGHT);
+
+  ctx.bezierCurveTo(cloudObject.X_COORDINATE + BEZIER_STEP, cloudObject.Y_COORDINATE + CLOUD_HEIGHT - CONTROL_POINT_Y_2,
+      cloudObject.X_COORDINATE + BEZIER_STEP, cloudObject.Y_COORDINATE + CLOUD_HEIGHT - CONTROL_POINT_Y_1,
+      cloudObject.X_COORDINATE, cloudObject.Y_COORDINATE);
 
   ctx.closePath();
-  ctx.fillStyle = cloud.COLOR;
+  ctx.fillStyle = cloudObject.COLOR;
   ctx.fill();
   ctx.stroke();
 };
 
-var findMaxTime = function(times) {
+var findMaxTime = function (times) {
   var max = 0;
-  for (let i = 0; i < times.length; i++) {
-    max = times[i] > max ? times[i] : max;    
+  for (var i = 0; i < times.length; i++) {
+    max = times[i] > max ? times[i] : max;
   }
   return max;
 };
 
-var renderBar = function(ctx, players, times) {
+var renderBar = function (ctx, players, times) {
   var maxTime = findMaxTime(times);
   for (var i = 0; i < players.length; i++) {
     var time = Math.round(times[i]);
@@ -97,14 +97,26 @@ var renderBar = function(ctx, players, times) {
   }
 };
 
-var renderText = function(ctx, options) {
+var renderText = function (ctx, options) {
   ctx.fillStyle = text.COLOR;
   ctx.font = text.FONT;
   ctx.fillText(options.text, options.x, options.y);
 };
 
-window.renderStatistics = function(ctx, players, times) {
+window.renderStatistics = function (ctx, players, times) {
   renderCloud(ctx, shadow);
   renderCloud(ctx, cloud);
+  var congradMessage = {
+    text: 'Ура, вы победили!',
+    x: cloud.X_COORDINATE + 100,
+    y: cloud.Y_COORDINATE + 25
+  };
+  var resultMessage = {
+    text: 'Список результатов:',
+    x: congradMessage.x,
+    y: congradMessage.y + text.GAP * 2
+  };
+  renderText(ctx, congradMessage);
+  renderText(ctx, resultMessage);
   renderBar(ctx, players, times);
 };
