@@ -7,8 +7,7 @@ var COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161
 var EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
 var WIZARDS_COUNT = 4;
 
-var userDialog = document.querySelector('.setup');
-userDialog.classList.remove('hidden');
+var setupWindow = document.querySelector('.setup');
 
 var getRandom = function (array) {
   var i = Math.floor(Math.random() * array.length);
@@ -39,10 +38,27 @@ var similarWizardsList = document.querySelector('.setup-similar-list');
 var wizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
 var wizards = generateWizards();
 var fragment = document.createDocumentFragment();
+var setupSimilar = document.querySelector('.setup-similar');
+
+setupSimilar.classList.remove('hidden');
 
 for (var i = 0; i < wizards.length; i++) {
   fragment.appendChild(renderWizard(wizards[i]));
 }
 
 similarWizardsList.appendChild(fragment);
-userDialog.querySelector('.setup-similar').classList.remove('hidden');
+
+var showSetupWindow = function () {
+  setupWindow.classList.remove('hidden');
+};
+
+var hideSetupWindow = function () {
+  setupWindow.classList.add('hidden');
+};
+
+var setupOpenBlock = document.querySelector('.setup-open');
+var setupCloseBlock = document.querySelector('.setup-close');
+
+var clickOnSetupOpenBlock = setupOpenBlock.addEventListener('click', showSetupWindow);
+var clickOnSetupCloseBlock = setupCloseBlock.addEventListener('click', hideSetupWindow);
+
