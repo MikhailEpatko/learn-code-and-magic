@@ -36,7 +36,7 @@ var bar = {
   MAX_HEIGHT: 130
 };
 
-var renderCloud = function name(ctx, cloudObject) {
+var renderCloud = function (ctx, cloudObject) {
   ctx.beginPath();
   ctx.moveTo(cloud.X_COORDINATE, cloud.Y_COORDINATE);
 
