@@ -9,12 +9,12 @@ var WIZARDS_COUNT = 4;
 
 var setupWindow = document.querySelector('.setup');
 
-var getRandom = function (array) {
+var getRandom = function(array) {
   var i = Math.floor(Math.random() * array.length);
   return array[i];
 };
 
-var generateWizards = function () {
+var generateWizards = function() {
   var wizards = [];
   for (var i = 0; i < WIZARDS_COUNT; i++) {
     wizards.push({
@@ -26,7 +26,7 @@ var generateWizards = function () {
   return wizards;
 };
 
-var renderWizard = function (wizard) {
+var renderWizard = function(wizard) {
   var wizardElement = wizardTemplate.cloneNode(true);
   wizardElement.querySelector('.setup-similar-label').textContent = wizard.name;
   wizardElement.querySelector('.wizard-coat').style.fill = wizard.coatColor;
@@ -48,11 +48,11 @@ for (var i = 0; i < wizards.length; i++) {
 
 similarWizardsList.appendChild(fragment);
 
-var showSetupWindow = function () {
+var showSetupWindow = function() {
   setupWindow.classList.remove('hidden');
 };
 
-var hideSetupWindow = function () {
+var hideSetupWindow = function() {
   setupWindow.classList.add('hidden');
 };
 
@@ -61,4 +61,13 @@ var setupCloseBlock = document.querySelector('.setup-close');
 
 var clickOnSetupOpenBlock = setupOpenBlock.addEventListener('click', showSetupWindow);
 var clickOnSetupCloseBlock = setupCloseBlock.addEventListener('click', hideSetupWindow);
+
+var userNameInput = setupWindow.querySelector('.setup-user-name');
+userNameInput.addEventListener('invalid', function() {
+  if (userNameInput.validity.tooShort) {
+    userNameInput.setCustomValidity('The name must to have 2 chars minimum');
+  } else if (userNameInput.validity.valueMissing) {
+    userNameInput.setCustomValidity('Required field. Please, input a name');
+  }
+});
 
