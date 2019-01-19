@@ -6,15 +6,17 @@ var COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161
   'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
 var EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
 var WIZARDS_COUNT = 4;
+var ENTER_KEY_CODE = "Enter";
+var ESC_KEY_CODE = "Escape";
 
 var setupWindow = document.querySelector('.setup');
 
-var getRandom = function(array) {
+var getRandom = function (array) {
   var i = Math.floor(Math.random() * array.length);
   return array[i];
 };
 
-var generateWizards = function() {
+var generateWizards = function () {
   var wizards = [];
   for (var i = 0; i < WIZARDS_COUNT; i++) {
     wizards.push({
@@ -26,7 +28,7 @@ var generateWizards = function() {
   return wizards;
 };
 
-var renderWizard = function(wizard) {
+var renderWizard = function (wizard) {
   var wizardElement = wizardTemplate.cloneNode(true);
   wizardElement.querySelector('.setup-similar-label').textContent = wizard.name;
   wizardElement.querySelector('.wizard-coat').style.fill = wizard.coatColor;
@@ -48,26 +50,54 @@ for (var i = 0; i < wizards.length; i++) {
 
 similarWizardsList.appendChild(fragment);
 
-var showSetupWindow = function() {
+//-----------Ex#4------------
+
+var setupOpenBlock = document.querySelector('.setup-open');
+var setupCloseBlock = setupWindow.querySelector('.setup-close');
+var userNameInput = setupWindow.querySelector('.setup-user-name');
+
+var closePopup = function() {
+  setupWindow.classList.add('hidden');
+  document.removeEventListener('keydown', onSetupWindowEscPress);
+};
+
+var openPopup = function() {
   setupWindow.classList.remove('hidden');
 };
 
-var hideSetupWindow = function() {
-  setupWindow.classList.add('hidden');
+var onSetupWindowEscPress = document.addEventListener('keydown', function(evt) {
+  if  (evt.key === ESC_KEY_CODE && userNameInput !== document.activeElement) {
+    closePopup();
+  }
+});
+
+var showSetupWindow = function() {
+  openPopup();
+  document.addEventListener('keydown', onSetupWindowEscPress);
 };
 
-var setupOpenBlock = document.querySelector('.setup-open');
-var setupCloseBlock = document.querySelector('.setup-close');
+setupOpenBlock.addEventListener('click', showSetupWindow);
 
-var clickOnSetupOpenBlock = setupOpenBlock.addEventListener('click', showSetupWindow);
-var clickOnSetupCloseBlock = setupCloseBlock.addEventListener('click', hideSetupWindow);
+setupOpenBlock.addEventListener('keydown', function(evt) {
+  if (evt.key === ENTER_KEY_CODE) {
+    showSetupWindow();
+  }
+});
 
-var userNameInput = setupWindow.querySelector('.setup-user-name');
-userNameInput.addEventListener('invalid', function() {
+setupCloseBlock.addEventListener('click', closePopup);
+
+setupCloseBlock.addEventListener('keydown', function(evt) {
+  if  (evt.key === ENTER_KEY_CODE) {
+    closePopup();
+  }
+});
+
+userNameInput.addEventListener('invalid', function () {
   if (userNameInput.validity.tooShort) {
     userNameInput.setCustomValidity('The name must to have 2 chars minimum');
+  } else if (userNameInput.validity.tooLong) {
+    userNameInput.setCustomValidity('The name should have up to 25 chars');
   } else if (userNameInput.validity.valueMissing) {
     userNameInput.setCustomValidity('Required field. Please, input a name');
   }
 });
-
